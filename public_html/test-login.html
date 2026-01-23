@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Admin Login</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body>
+    <h1>Test Admin Login</h1>
+    <form id="loginForm">
+        <div>
+            <label>Email:</label>
+            <input type="email" id="email" value="admin@hindutakht.com" required>
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" id="password" value="admin123" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                
+                if (data.success) {
+                    // Store the token
+                    localStorage.setItem('admin_auth_token', data.data.token);
+                    document.getElementById('result').innerHTML += '<p>Token stored in localStorage</p>';
+                    
+                    // Try to access the profile
+                    setTimeout(testProfile, 1000);
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p>Error: ' + error.message + '</p>';
+            }
+        });
+        
+        async function testProfile() {
+            const token = localStorage.getItem('admin_auth_token');
+            if (!token) {
+                document.getElementById('result').innerHTML += '<p>No token found</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/admin/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML += '<pre>Profile: ' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result').innerHTML += '<p>Profile Error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

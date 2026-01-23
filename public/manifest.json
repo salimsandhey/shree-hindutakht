@@ -1,0 +1,21 @@
+{
+  "name": "Shree Hindutakht",
+  "short_name": "Hindutakht",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f97316",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo3.png",
+      "type": "image/png",
+      "sizes": "540x123"
+    },
+    {
+      "src": "/logo1.png",
+      "type": "image/png",
+      "sizes": "412x310"
+    }
+  ]
+}

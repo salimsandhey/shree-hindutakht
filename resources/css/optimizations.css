@@ -1,0 +1,327 @@
+/* Performance Optimizations CSS */
+
+/* Lazy Loading Images */
+.lazy-image {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    background-color: #f3f4f6;
+    min-height: 200px; /* Prevent layout shift */
+    background-image: linear-gradient(45deg, #f3f4f6 25%, transparent 25%), 
+                      linear-gradient(-45deg, #f3f4f6 25%, transparent 25%), 
+                      linear-gradient(45deg, transparent 75%, #f3f4f6 75%), 
+                      linear-gradient(-45deg, transparent 75%, #f3f4f6 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.lazy-image.fade-in {
+    opacity: 1;
+    background-image: none;
+}
+
+.lazy-image.loaded {
+    opacity: 1;
+    background-image: none;
+    transition: none;
+}
+
+.lazy-placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+/* Skeleton Loaders */
+.post-skeleton {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.post-skeleton .animate-pulse > * {
+    background: linear-gradient(
+        90deg,
+        #e5e7eb,
+        #f3f4f6,
+        #e5e7eb
+    );
+    background-size: 200% 100%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.image-skeleton {
+    background: linear-gradient(
+        90deg,
+        #e5e7eb,
+        #f3f4f6,
+        #e5e7eb
+    );
+    background-size: 200% 100%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Shimmer Animation */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Pulse Animation for Skeleton Loaders */
+@keyframes pulse {
+    0%, 100% {
+        background-position: 200% 0;
+    }
+    50% {
+        background-position: -200% 0;
+    }
+}
+
+/* Improved Loading States */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    min-height: 200px;
+}
+
+.loading-spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 50%;
+    border-top-color: #f97316;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Smooth Transitions */
+.post-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Better Image Loading */
+.post-image {
+    position: relative;
+    overflow: hidden;
+    background-color: #f3f4f6;
+}
+
+.post-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.5) 50%,
+        transparent 70%
+    );
+    animation: loading-shine 2s infinite;
+    z-index: 1;
+}
+
+.post-image img {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes loading-shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%);
+    }
+}
+
+/* Infinite Scroll Indicator */
+.infinite-scroll-trigger {
+    height: 1px;
+    background: transparent;
+}
+
+.load-more-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* Cache Status Indicator (for development) */
+.cache-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    z-index: 1000;
+    display: none;
+}
+
+.cache-indicator.show {
+    display: block;
+}
+
+/* Optimized Grid for Images */
+.media-grid {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.media-grid.single {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+}
+
+.media-grid.double {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.media-grid.triple {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.media-grid.quad {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+/* Performance Optimizations */
+.post-card img {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Reduce layout thrashing */
+.optimized-content {
+    contain: layout style paint;
+}
+
+/* Better focus states for accessibility */
+.lazy-image:focus,
+.post-card:focus-within {
+    outline: 2px solid #f97316;
+    outline-offset: 2px;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+    .post-skeleton {
+        margin-bottom: 12px;
+        padding: 12px;
+    }
+    
+    .media-grid {
+        gap: 0.25rem;
+    }
+    
+    .post-card {
+        transform: none;
+    }
+    
+    .post-card:hover {
+        transform: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Dark mode support (if needed later) */
+@media (prefers-color-scheme: dark) {
+    .post-skeleton .animate-pulse > * {
+        background: linear-gradient(
+            90deg,
+            #374151,
+            #4b5563,
+            #374151
+        );
+    }
+    
+    .lazy-image {
+        background-color: #374151;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .lazy-image,
+    .post-card,
+    .loading-spinner {
+        animation: none;
+        transition: none;
+    }
+    
+    .post-skeleton .animate-pulse > *,
+    .image-skeleton {
+        animation: none;
+    }
+}
+
+/* Fixed header and navigation */
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: white;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Content padding to account for fixed header and nav */
+.with-fixed-header {
+    padding-top: 70px;
+}
+
+.with-fixed-bottom-nav {
+    padding-bottom: 60px;
+}
+
+/* Logo styles */
+.admin-logo {
+    height: 32px;
+    width: auto;
+}
