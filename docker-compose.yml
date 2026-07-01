@@ -6,8 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - "8080:80"
+    expose:
+      - "80"
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
@@ -25,13 +25,13 @@ services:
   db:
     image: mysql:8.0
     restart: always
+    expose:
+      - "3306"
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-hindutakht}
       MYSQL_USER: ${DB_USERNAME:-hindutakht_user}
       MYSQL_PASSWORD: ${DB_PASSWORD:-hindutakht_password}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
-    ports:
-      - "3306:3306"
     volumes:
       - db-data:/var/lib/mysql
 
