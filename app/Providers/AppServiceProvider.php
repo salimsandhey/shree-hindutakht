@@ -23,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Force HTTPS in production or if configured via ENV
+        if (env('APP_ENV') === 'production' || env('FORCE_HTTPS', false)) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         // Set the public path for Hostinger environments
         if (env('FILESYSTEM_DISK') === 'hostinger') {
             $this->app->bind('path.public', function() {
